@@ -1,5 +1,10 @@
 # ecmodp
 Graphs points, point addition on elliptic curves over finite fields
 
--ali wuz here
-oh, hi! -lauren 
+steps for now :
+commands 
+
+1) docker-compose down  
+2) docker-compose build --no-cache
+3) docker-compose up
+
