@@ -1,7 +1,9 @@
 Flask==2.1.0        # For setting up the web server and handling requests
+Werkzeug==2.0.3     # Compatible version of Werkzeug
 numpy==1.21.2       # For numerical operations and math functions
 scipy==1.7.1        # For advanced mathematical operations and solvers
 sympy==1.9          # For symbolic mathematics
 gunicorn==20.1.0    # For running the Flask app in a production environment
 matplotlib==3.4.3   # For plotting and visualization
+
 
