@@ -17,9 +17,9 @@ def add_numbers():
     b = request.args.get("b", type=int)
     p = request.args.get("p", type=int)
 
-    # Ensure both numbers are provided
-    if a is None or b is None:
-        return "Please provide both numbers as query parameters: ?a=1&b=2"
+    # Ensure 3 numbers are provided
+    if a is None or b is None or p is None:
+        return "Please provide 3 numbers as query parameters: ?a=1&b=2"
 
     # Perform addition
     result = a + b + p
