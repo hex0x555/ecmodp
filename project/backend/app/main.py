@@ -26,7 +26,7 @@ def add_numbers():
     points = only_get_rat_points(a, b, p)
 
     # Return the result
-    return f"The result of {a} + {b} mod {p} is {points}"
+    return f"The result of {a} + {b} mod {p} is {points} yo"
 
 ############################
 def modular_sqrt(a, p):
