@@ -13,3 +13,15 @@ services:
       - FLASK_ENV=development
       - FLASK_APP=app.main
     command: flask run --host=0.0.0.0 --port=8000 --reload
+  
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    stdin_open: true
+    tty: true

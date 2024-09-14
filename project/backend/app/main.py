@@ -1,8 +1,10 @@
 from flask import Flask, request
+from flask_cors import CORS
 
 # import request
 
 app = Flask(__name__)
+CORS(app)
 
 
 @app.route("/")
@@ -19,7 +21,7 @@ def add_numbers():
 
     # Ensure 3 numbers are provided
     if a is None or b is None or p is None:
-        return "Please provide 3 numbers as query parameters: ?a=1&b=2"
+        return "Please provide 3 numbers as query parameters: ?a=1&b=2&p=3"
 
     # Perform addition
     #result = a + b + p
