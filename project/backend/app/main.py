@@ -25,14 +25,14 @@ def add_numbers():
 
     # Ensure 3 numbers are provided
     if a is None or b is None or p is None:
-        return "Please provide 3 numbers as query parameters: ?a=1&b=2&p=3"
+        return "Please provide 3 numbers as query parameters: "
 
     # Perform addition
     # result = a + b + p
     points = only_get_rat_points(a, b, p)
 
     # Return the result
-    return f"The result of {a} + {b} mod {p} is {points} yo"
+    return f"The result of {a} + {b} mod {p} is {points}"
 
 
 ############################
