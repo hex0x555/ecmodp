@@ -10,10 +10,12 @@ services:
     volumes:
       - ./backend:/app
     environment:
-      - FLASK_ENV=development
       - FLASK_APP=app.main
+      - FLASK_ENV=development
+      - FLASK_DEBUG=1
+      - PYTHONUNBUFFERED=1 # Add this line
     command: flask run --host=0.0.0.0 --port=8000 --reload
-  
+
   frontend:
     build:
       context: ./frontend

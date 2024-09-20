@@ -19,20 +19,25 @@ def add_numbers():
     b = request.args.get("b", type=int)
     p = request.args.get("p", type=int)
 
+    print(f"value of a is {a}")
+    print(f"value of b is {b}")
+    print(f"value of p is {p}")
+
     # Ensure 3 numbers are provided
     if a is None or b is None or p is None:
         return "Please provide 3 numbers as query parameters: ?a=1&b=2&p=3"
 
     # Perform addition
-    #result = a + b + p
+    # result = a + b + p
     points = only_get_rat_points(a, b, p)
 
     # Return the result
     return f"The result of {a} + {b} mod {p} is {points} yo"
 
+
 ############################
 def modular_sqrt(a, p):
-    """ Returns the square root of a modulo p if it exists, using the Tonelli-Shanks algorithm """
+    """Returns the square root of a modulo p if it exists, using the Tonelli-Shanks algorithm"""
     if a == 0:
         return 0
     if pow(a, (p - 1) // 2, p) == p - 1:
@@ -77,10 +82,11 @@ def modular_sqrt(a, p):
 
     return r
 
+
 def find_rational_points(a, b, p):
     rational_points = []
     for x in range(p):
-        rhs = (x**3 + a*x + b) % p
+        rhs = (x**3 + a * x + b) % p
         y = modular_sqrt(rhs, p)
         if y is not None:
             rational_points.append((x, y))
@@ -88,15 +94,17 @@ def find_rational_points(a, b, p):
                 rational_points.append((x, p - y))
     return rational_points
 
+
 def only_get_rat_points(a, b, p):
     points = find_rational_points(a, b, p)
     print(points)
     return points
 
-#a = -9
-#b = 14
-#p = 29
-#points = only_get_rat_points(a, b, p)
+
+# a = -9
+# b = 14
+# p = 29
+# points = only_get_rat_points(a, b, p)
 
 ############################
 
