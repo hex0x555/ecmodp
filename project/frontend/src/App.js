@@ -10,10 +10,12 @@ function App() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      const response = await axios.get('http://localhost:8000/add', {
-        num1: input1,
-        num2: input2,
-        num3: input3
+      const response = await axios.get(`http://localhost:8000/add`, {
+        params: {
+          a: input1,
+          b: input2,
+          p: input3
+        }
       });
       console.log('Response:', response.data);
       setResult(response.data.result);  // Set the result state to the response data
