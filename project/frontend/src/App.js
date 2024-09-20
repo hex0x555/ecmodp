@@ -12,13 +12,13 @@ function App() {
     try {
       const response = await axios.get(`http://localhost:8000/add`, {
         params: {
-          a: input1,
-          b: input2,
-          p: input3
+          a: Number(input1),
+          b: Number(input2),
+          p: Number(input3)
         }
       });
-      console.log('Response:', response.data);
-      setResult(response.data.result);  // Set the result state to the response data
+      console.log('Response Data:', response.data);
+      setResult(response.data) //.result);  // Set the result state to the response data
     } catch (error) {
       console.error('Error:', error);
       setResult('Error: Unable to fetch data');  // Handle error in result
