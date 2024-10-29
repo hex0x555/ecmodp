@@ -1,5 +1,8 @@
 from flask import Flask, request
 from flask_cors import CORS
+import matplotlib.pyplot as plt
+import io
+import base64
 
 # import request
 
@@ -32,7 +35,55 @@ def add_numbers():
     points = only_get_rat_points(a, b, p)
 
     # Return the result
-    return f"The result of {a} + {b} mod {p} is {points}"
+    return f"The rational points on this curve with \n a = {a} , b = {b} and over Z({p}) is \n {points}"
+
+
+@app.route("/plot", methods=["GET"])
+def generate_plot():
+    # Get the values from the request arguments
+    a = request.args.get("a", type=int)
+    b = request.args.get("b", type=int)
+    p = request.args.get("p", type=int)
+
+    # Ensure 3 numbers are provided
+    if a is None or b is None or p is None:
+        return "Please provide 3 numbers as query parameters: a, b, and p"
+
+    # Calculate the points on the elliptic curve
+    points = only_get_rat_points(a, b, p)
+
+    # Check if points are found
+    if not points:
+        return "No points found for the given values of a, b, and p."
+
+    # Use the original plot_points function to create the plot
+    x_vals, y_vals = zip(*points)
+
+    # Create a scatter plot
+    plt.figure(figsize=(5, 5))  # Adjust the figure size as needed
+    plt.scatter(
+        x_vals, y_vals, color="blue", marker="o"
+    )  # Choose color and marker style
+
+    # Adding labels and title
+    plt.xlabel("x")
+    plt.ylabel("y")
+    plt.title("Plot of Points on Elliptic Curve")
+
+    # Display grid
+    plt.grid(True)
+
+    # Setting axis limits with some margin
+    plt.xlim(min(x_vals) - 1, max(x_vals) + 1)
+    plt.ylim(min(y_vals) - 1, max(y_vals) + 1)
+
+    # Convert plot to PNG image and return as base64
+    img = io.BytesIO()
+    plt.savefig(img, format="png")
+    img.seek(0)
+    plot_url = base64.b64encode(img.getvalue()).decode()
+
+    return f"<img src='data:image/png;base64,{plot_url}'/>"
 
 
 ############################
