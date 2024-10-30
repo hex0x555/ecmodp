@@ -1,7 +1,8 @@
-from flask import Flask, request
+from flask import Flask, request, make_response
 from flask_cors import CORS
 import matplotlib.pyplot as plt
 import io
+import csv
 import base64
 
 # import request
@@ -36,6 +37,48 @@ def add_numbers():
 
     # Return the result
     return f"The rational points on this curve with \n a = {a} , b = {b} and over Z({p}) is \n {points}"
+
+
+def inverse_mod(k, p):
+    # Same implementation as before
+    if k == 0:
+        raise ZeroDivisionError("division by zero")
+    if k < 0:
+        return p - inverse_mod(-k, p)
+    s, old_s = 0, 1
+    t, old_t = 1, 0
+    r, old_r = p, k
+    while r != 0:
+        quotient = old_r // r
+        old_r, r = r, old_r - quotient * r
+        old_s, s = s, old_s - quotient * s
+        old_t, t = t, old_t - quotient * t
+    gcd, x, y = old_r, old_s, old_t
+    if gcd != 1:
+        raise ValueError("inverse_mod does not exist")
+    else:
+        return x % p
+
+
+def add_points(P, Q, a, p):
+    # Same implementation as before
+    if P == (None, None):
+        return Q
+    if Q == (None, None):
+        return P
+    x1, y1 = P
+    x2, y2 = Q
+    if x1 == x2 and y1 != y2:
+        return (None, None)  # Vertical line, point at infinity
+    if x1 == x2 and y1 == y2:
+        if y1 == 0:
+            return (None, None)  # Tangent at vertical line through P, point at infinity
+        lambda_ = (3 * x1 * x1 + a) * inverse_mod(2 * y1, p) % p
+    else:
+        lambda_ = (y2 - y1) * inverse_mod(x2 - x1, p) % p
+    x3 = (lambda_ * lambda_ - x1 - x2) % p
+    y3 = (lambda_ * (x1 - x3) - y1) % p
+    return (x3, y3)
 
 
 @app.route("/plot", methods=["GET"])
@@ -84,6 +127,109 @@ def generate_plot():
     plot_url = base64.b64encode(img.getvalue()).decode()
 
     return f"<img src='data:image/png;base64,{plot_url}'/>"
+
+
+@app.route("/cayley_table", methods=["GET"])
+def generate_cayley_table():
+    # Get the values from the request arguments
+    a = request.args.get("a", type=int)
+    b = request.args.get("b", type=int)
+    p = request.args.get("p", type=int)
+
+    # Ensure required parameters are provided
+    if a is None or b is None or p is None:
+        return "Please provide values for a, b, and p as query parameters."
+
+    # Calculate points (replace with actual calculation if needed)
+    points = only_get_rat_points(a, b, p)
+
+    # Generate the Cayley table plot
+    img_data = create_cayley_table_plot(points, a, p)
+
+    # Return the image as an HTML img tag
+    return f"<img src='data:image/png;base64,{img_data}'/>"
+
+
+def create_cayley_table_plot(points, a, p):
+    size = len(points)
+    cell_text = []
+    for i in range(size):
+        row = []
+        for j in range(size):
+            result = add_points(
+                points[i], points[j], a, p
+            )  # Ensure add_points is defined elsewhere
+            row.append(str(result))
+        cell_text.append(row)
+
+    fig, ax = plt.subplots()
+    ax.set_axis_off()
+    table = ax.table(
+        cellText=cell_text,
+        rowLabels=[str(pt) for pt in points],
+        colLabels=[str(pt) for pt in points],
+        cellLoc="center",
+        loc="center",
+    )
+    table.auto_set_font_size(False)
+    table.set_fontsize(8)  # Adjust the font size if necessary
+    table.scale(1, 1.5)  # Adjust the scaling if necessary
+
+    # Convert the plot to a PNG image and encode as base64
+    img = io.BytesIO()
+    plt.savefig(img, format="png")
+    img.seek(0)
+    plt.close(fig)  # Close the plot to free memory
+    img_data = base64.b64encode(img.getvalue()).decode()
+
+    return img_data
+
+
+@app.route("/download_cayley_table", methods=["GET"])
+def download_cayley_table():
+    # Get the values from the request arguments
+    a = request.args.get("a", type=int)
+    b = request.args.get("b", type=int)
+    p = request.args.get("p", type=int)
+
+    # Ensure required parameters are provided
+    if a is None or b is None or p is None:
+        return "Please provide values for a, b, and p as query parameters."
+
+    # Calculate points on the elliptic curve
+    points = only_get_rat_points(a, b, p)
+
+    # Generate the CSV data
+    csv_data = create_cayley_table_csv(points, a, p)
+
+    # Prepare the CSV file for download
+    response = make_response(csv_data)
+    response.headers["Content-Disposition"] = "attachment; filename=cayley_table.csv"
+    response.headers["Content-Type"] = "text/csv"
+
+    return response
+
+
+def create_cayley_table_csv(points, a, p):
+    size = len(points)
+    output = io.StringIO()
+    writer = csv.writer(output)
+
+    # Write the header row (column labels with points)
+    writer.writerow([" "] + [str(pt) for pt in points])
+
+    # Write each row of the table
+    for i in range(size):
+        row = [str(points[i])]  # Start with the row label
+        for j in range(size):
+            result = add_points(
+                points[i], points[j], a, p
+            )  # Ensure add_points is defined
+            row.append(str(result))
+        writer.writerow(row)
+
+    output.seek(0)
+    return output.getvalue()
 
 
 ############################
