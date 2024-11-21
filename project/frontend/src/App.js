@@ -80,7 +80,7 @@ function App() {
         <input type="number" value={input1} onChange={(e) => setInput1(e.target.value)} style={styles.input} placeholder="Enter a" />
         <input type="number" value={input2} onChange={(e) => setInput2(e.target.value)} style={styles.input} placeholder="Enter b" />
         <input type="number" value={input3} onChange={(e) => setInput3(e.target.value)} style={styles.input} placeholder="Enter p" />
-        <button type="submit" style={styles.button}>Get Result</button>
+        <button type="submit" style={styles.button}>Calculate points</button>
       </form>
 
       {/* Result display */}
@@ -129,8 +129,8 @@ const styles = {
     fontWeight: '300',
     color: '#2190ff', // Title color to match button text color
     fontFamily: '"Century Gothic", "Avenir Light", sans-serif', // Title font
-    textTransform: 'uppercase',
-    letterSpacing: '2px', // Increased letter spacing
+    textTransform: 'lowercase',
+    letterSpacing: '10px', // Increased letter spacing
   },
   form: {
     display: 'flex',

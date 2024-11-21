@@ -22,6 +22,7 @@
   justify-content: center;
   font-size: calc(10px + 2vmin);
   color: white;
+  text-transform: lowercase;
 }
 
 .App-link {
@@ -35,4 +36,45 @@
   to {
     transform: rotate(360deg);
   }
+
+/* Center the entire container on the page */
+.center-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+}
+
+/* Title styling */
+.App-header {
+  font-size: calc(10px + 2vmin);
+  color: #2190ff;
+  letter-spacing: 2px;
+  text-transform: lowercase;
+  text-align: center;
+  margin-bottom: 20px;
+  width: 100%; /* Set width to 100% */
+  max-width: 300px; /* Match input field width */
+}
+
+/* Input form styling */
+.form-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  width: 100%; /* Ensures the form is as wide as the title */
+  max-width: 300px; /* Matches the width of the title */
+}
+
+input {
+  padding: 10px;
+  font-size: 1rem;
+  border-radius: 6px;
+  border: 1px solid #333;
+  outline: none;
+  width: 100%;
+}
+
 }
