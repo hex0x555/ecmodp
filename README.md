@@ -1,5 +1,5 @@
 # ecmodp
-Calculates points on elliptic curve over finite field, graphs points, performs elliptic curve point addition, and generates cayley table
+Application calculates points on elliptic curve over finite field, graphs points, performs elliptic curve point addition, and generates cayley table
 
 steps for now :
 commands 
