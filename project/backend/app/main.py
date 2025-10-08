@@ -36,7 +36,8 @@ def add_numbers():
     points = only_get_rat_points(a, b, p)
 
     # Return the result
-    return f"E(𝔽\u209A) = {{ {', '.join(map(str, points))} }}"
+    print("hey")
+    return f"E(𝔽\u209a) = {{ {', '.join(map(str, points))} }}"
 
 
 def inverse_mod(k, p):
