@@ -1,5 +1,6 @@
 from flask import Flask, request, make_response
 from flask_cors import CORS
+from datetime import datetime
 import matplotlib.pyplot as plt
 import io
 import csv
@@ -8,7 +9,29 @@ import base64
 # import request
 
 app = Flask(__name__)
-CORS(app)
+# CORS(app, resources={r"/*": {"origins": "*"}})
+from flask_cors import CORS
+
+CORS(
+    app,
+    resources={
+        r"/*": {
+            "origins": [
+                "http://ec2-18-216-219-102.us-east-2.compute.amazonaws.com:3000",
+                "http://localhost:3000",
+            ]
+        }
+    },
+)
+
+
+@app.get("/health")
+def health():
+    resp = make_response({"status": "ok", "ts": datetime.utcnow().isoformat() + "Z"})
+    resp.headers["Cache-Control"] = "no-store, no-cache, must-revalidate, max-age=0"
+    resp.headers["Pragma"] = "no-cache"
+    resp.headers["Expires"] = "0"
+    return resp, 200
 
 
 @app.route("/")
